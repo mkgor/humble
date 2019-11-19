@@ -1,0 +1,14 @@
+{
+    "name": "pixaye/humble",
+    "description": "ORM, which wraps over the database and allows you to create custom data types with custom logic.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gor Mkhitaryan",
+            "email": "mkhitaryan.gor@inbox.ru"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
