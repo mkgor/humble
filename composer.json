@@ -1,6 +1,6 @@
 {
   "name": "pixaye/humble",
-  "description": "ORM, which wraps over the database and allows you to create custom data types with custom logic.",
+  "description": "Lightweight, expandable and easy-to-use query builder.",
   "type": "project",
   "license": "MIT",
   "authors": [
@@ -15,12 +15,10 @@
   "autoload": {
     "psr-4": {
       "Humble\\": "src/Humble/",
-      "Application\\": "app/"
     }
   },
   "minimum-stability": "stable",
   "require": {
-    "ext-mbstring": "*",
-    "ext-json": "*"
+    "ext-pdo": "*"
   }
 }
