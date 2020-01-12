@@ -27,6 +27,11 @@ class MySQLRepository implements RepositoryInterface
     private $provider;
 
     /**
+     * @var array
+     */
+    private static $tableAliasCollection;
+
+    /**
      * CommonRepository constructor.
      *
      * @param string $entity
@@ -53,6 +58,23 @@ class MySQLRepository implements RepositoryInterface
     public function setEntity($entity)
     {
         $this->entity = $entity;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTableAliasCollection()
+    {
+        return self::$tableAliasCollection;
+    }
+
+    /**
+     * @param $table
+     * @param $alias
+     */
+    public static function setTableAlias($table, $alias)
+    {
+        self::$tableAliasCollection[$table] = $alias;
     }
 
     /**
@@ -91,7 +113,7 @@ class MySQLRepository implements RepositoryInterface
 
         $this->buildCriteria($query, $params, $criteria);
 
-        return $this->provider->query($query, $params);
+        return $query;
     }
 
     /**
@@ -166,6 +188,18 @@ class MySQLRepository implements RepositoryInterface
 
         $this->buildCriteria($query, $params, $criteria);
 
+        return $this->provider->query($query, $params);
+    }
+
+    /**
+     * Direct SQL query
+     *
+     * @param string $query
+     * @param array $params
+     * @return mixed
+     */
+    public function query($query, $params = [])
+    {
         return $this->provider->query($query, $params);
     }
 }
