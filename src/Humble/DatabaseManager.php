@@ -3,6 +3,7 @@
 namespace Humble;
 
 use Humble\Database\ModuleInterface;
+use Humble\Database\MySQL\MySQLModule;
 use Humble\Database\RepositoryInterface;
 use Humble\Exception\HumbleException;
 
@@ -28,8 +29,12 @@ class DatabaseManager
     {
         self::$configuration = $configuration;
 
-        /** @var ModuleInterface $module */
-        $module = new $configuration['module'];
+        if(isset($configuration['module'])) {
+            /** @var ModuleInterface $module */
+            $module = new $configuration['module'];
+        } else {
+            $module = new MySQLModule();
+        }
 
         if(!($module instanceof ModuleInterface)) {
             throw new HumbleException('Specified module does not implement ModuleInterface');
@@ -63,6 +68,9 @@ class DatabaseManager
 
         /** @var RepositoryInterface $repositoryObject */
         $repositoryObject = new $repositoryName($name);
+
+        /** Replacing repository name by its object after initialization */
+        self::$configuration['repository'] = $repositoryObject;
 
         if ($repositoryObject instanceof RepositoryInterface) {
             return $repositoryObject;
