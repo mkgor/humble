@@ -4,9 +4,8 @@ namespace Humble\Database\MySQL;
 
 use Humble\Database\ProviderInterface;
 use Humble\Database\RepositoryInterface;
+use Humble\Database\RepositoryTrait;
 use Humble\DatabaseManager;
-use Humble\Query\QueryInterface;
-use MongoDB\Driver\Query;
 
 /**
  * Class FallbackRepository
@@ -15,6 +14,8 @@ use MongoDB\Driver\Query;
  */
 class MySQLRepository implements RepositoryInterface
 {
+    use RepositoryTrait;
+
     /**
      * @var string
      */
@@ -76,51 +77,81 @@ class MySQLRepository implements RepositoryInterface
     }
 
     /**
-     * @param array $columns
-     * @param array $criteria
+     * @param array|string  $criteria
+     *
+     * @param string $columns
      *
      * @return mixed
      */
-    public function getBy($columns, ...$criteria)
+    public function getBy($criteria, $columns = '*')
     {
-        $query = sprintf("SELECT %s FROM %s ", is_array($columns) ? implode(',', $columns) : $columns, $this->getEntity());
+        $query = sprintf("SELECT %s FROM %s", is_array($columns) ? implode(',', $columns) : $columns, $this->getEntity());
 
         $params = [];
 
-        /** @var QueryInterface $item */
-        foreach ($criteria as $item) {
-            /** Getting an array which contains compiled query part and array of params */
-            $compiled = $item->getCompiled();
-
-            /** Adding query part to query string */
-            $query .= $compiled['query_part'];
-
-            /** Inserting params from criteria to general params array */
-            $params = array_merge($params, $compiled['params']);
-        }
+        $this->buildCriteria($query, $params, $criteria);
 
         return $this->provider->query($query, $params);
     }
 
     /**
-     * @param array $condition
+     * @param array $criteria
      * @param array $values
      *
      * @return mixed
+     * @throws \Exception
      */
-    public function update(array $condition, array $values)
+    public function update(array $criteria, array $values)
     {
-        // TODO: Implement update() method.
+        $params = [];
+
+        $query = sprintf('UPDATE %s SET', $this->getEntity());
+
+        $setArray = [];
+
+        foreach ($values as $key => $value) {
+            if(is_int($key)) {
+                $setArray[] = $value;
+            } else {
+                $placeholder = DatabaseManager::generatePlaceholder();
+
+                $setArray[] = sprintf(' %s = %s', $key, $placeholder);
+
+                $params[$placeholder] = $value;
+            }
+        }
+
+        $query .= implode(',', $setArray);
+
+        $this->buildCriteria($query, $params, $criteria);
+
+        return $this->provider->query($query, $params);
     }
 
     /**
      * @param array $values
      *
      * @return mixed
+     * @throws \Exception
      */
     public function insert(array $values)
     {
-        // TODO: Implement insert() method.
+        $insertValues = [];
+        $params = [];
+
+        foreach($values as $key => $value) {
+            $placeholder = DatabaseManager::generatePlaceholder();
+
+            $insertValues[] = $placeholder;
+
+            $params[$placeholder] = $value;
+        }
+
+        $query = sprintf('INSERT INTO %s (%s) VALUES (%s)', $this->getEntity(), implode(',', (array_map(function($item) {
+            return sprintf('`%s`', $item);
+        }, array_keys($values)))), implode(',', array_keys($params)));
+
+        return $this->provider->query($query, $params);
     }
 
     /**
