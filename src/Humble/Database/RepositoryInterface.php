@@ -16,12 +16,12 @@ interface RepositoryInterface
     public function get($primaryKey);
 
     /**
-     * @param       $columns
+     * @param array|string $columns
      * @param array $criteria
      *
      * @return mixed
      */
-    public function getBy($columns, ...$criteria);
+    public function getBy($criteria, $columns);
 
     /**
      * @param array $condition
@@ -29,7 +29,7 @@ interface RepositoryInterface
      *
      * @return mixed
      */
-    public function update(array $condition, array $values);
+    public function update(array $criteria, array $values);
 
     /**
      * @param array $values
@@ -39,9 +39,9 @@ interface RepositoryInterface
     public function insert(array $values);
 
     /**
-     * @param array $condition
+     * @param array $conditions
      *
      * @return mixed
      */
-    public function delete(array $condition);
+    public function delete(array $conditions);
 }

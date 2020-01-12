@@ -70,7 +70,7 @@ class Where implements QueryInterface
             }
         }
 
-        $this->setCompiled(sprintf('WHERE %s', implode(' AND ', $this->predicates)));
+        $this->setCompiled(sprintf(' WHERE %s', implode(' AND ', $this->predicates)));
     }
 
     /**
