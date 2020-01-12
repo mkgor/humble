@@ -1,0 +1,24 @@
+{
+  "name": "pixaye/humble",
+  "description": "Lightweight, expandable and easy-to-use query builder.",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gor Mkhitaryan",
+      "email": "mkhitaryan.gor@inbox.ru"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Humble\\": "src/Humble/",
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "ext-pdo": "*"
+  }
+}
