@@ -27,8 +27,10 @@ trait RepositoryTrait
             /** Adding query part to query string */
             $query .= $compiled['query_part'];
 
-            /** Inserting params from criteria to general params array */
-            $params = array_merge($params, $compiled['params']);
+            if(isset($compiled['params'])) {
+                /** Inserting params from criteria to general params array */
+                $params = array_merge($params, $compiled['params']);
+            }
         }
     }
 }

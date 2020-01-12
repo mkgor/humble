@@ -2,6 +2,7 @@
 
 namespace Humble\Query;
 
+use Humble\Database\RepositoryInterface;
 use Humble\DatabaseManager;
 use Humble\Exception\HumbleException;
 
@@ -70,7 +71,16 @@ class Where implements QueryInterface
             }
         }
 
-        $this->setCompiled(sprintf(' WHERE %s', implode(' AND ', $this->predicates)));
+        $query = sprintf(' WHERE %s', implode(' AND ', $this->predicates));
+        /** @var RepositoryInterface $repository */
+        $repository = DatabaseManager::getConfiguration('repository');
+        $aliasCollection = $repository->getTableAliasCollection();
+
+        foreach($aliasCollection as $original => $alias) {
+            $query = str_replace(sprintf('%s.', $original), sprintf('%s.', $alias), $query);
+        }
+
+        $this->setCompiled($query);
     }
 
     /**
