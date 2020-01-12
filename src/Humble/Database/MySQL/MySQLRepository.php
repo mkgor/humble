@@ -155,12 +155,17 @@ class MySQLRepository implements RepositoryInterface
     }
 
     /**
-     * @param array $condition
+     * @param array $criteria
      *
      * @return mixed
      */
-    public function delete(array $condition)
+    public function delete(array $criteria)
     {
-        // TODO: Implement delete() method.
+        $params = [];
+        $query = sprintf('DELETE FROM %s', $this->getEntity());
+
+        $this->buildCriteria($query, $params, $criteria);
+
+        return $this->provider->query($query, $params);
     }
 }

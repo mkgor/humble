@@ -39,9 +39,9 @@ interface RepositoryInterface
     public function insert(array $values);
 
     /**
-     * @param array $condition
+     * @param array $conditions
      *
      * @return mixed
      */
-    public function delete(array $condition);
+    public function delete(array $conditions);
 }
