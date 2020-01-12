@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Humble\\": "src/Humble/",
+      "Humble\\": "src/Humble/"
     }
   },
   "minimum-stability": "stable",
