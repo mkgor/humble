@@ -2,6 +2,8 @@
 
 namespace Humble\Query;
 
+use Humble\Query\Entity\CompileResult;
+
 /**
  * Class AndWhere
  * @package Query
@@ -16,17 +18,14 @@ class AndWhere extends Where
     }
 
     /**
-     * @return array
+     * @return CompileResult
      */
     public function getCompiled()
     {
-        /** @var array $compiled */
+        /** @var CompileResult $compiled */
         $compiled = parent::getCompiled();
-        $compiled['query_part'] = str_replace('WHERE','',$compiled['query_part']);
+        $compiled->setQueryPart(sprintf(' AND (%s)', trim(str_replace('WHERE','',$compiled->getQueryPart()))));
 
-        return [
-            'query_part' => sprintf(' AND (%s)', trim($compiled['query_part'])),
-            'params' => $compiled['params']
-        ];
+        return $compiled;
     }
 }

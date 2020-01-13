@@ -106,7 +106,6 @@ class MySQLRepository implements RepositoryInterface
      * @param string $columns
      *
      * @return mixed
-     * @throws HumbleException
      */
     public function getBy($criteria, $columns = '*')
     {
