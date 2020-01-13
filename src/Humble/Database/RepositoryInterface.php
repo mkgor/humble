@@ -21,7 +21,7 @@ interface RepositoryInterface
      *
      * @return mixed
      */
-    public function getBy($criteria, $columns);
+    public function getBy($criteria, $columns = '*');
 
     /**
      * @param array $condition
