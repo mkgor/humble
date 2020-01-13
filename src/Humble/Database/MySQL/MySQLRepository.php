@@ -2,10 +2,12 @@
 
 namespace Humble\Database\MySQL;
 
+use Exception;
 use Humble\Database\ProviderInterface;
 use Humble\Database\RepositoryInterface;
 use Humble\Database\RepositoryTrait;
 use Humble\DatabaseManager;
+use Humble\Exception\HumbleException;
 
 /**
  * Class FallbackRepository
@@ -84,7 +86,7 @@ class MySQLRepository implements RepositoryInterface
      * @param array  $columns
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function get($value, $primaryKey = 'id', $columns = ['*'])
     {
@@ -99,11 +101,12 @@ class MySQLRepository implements RepositoryInterface
     }
 
     /**
-     * @param array|string  $criteria
+     * @param array|string $criteria
      *
      * @param string $columns
      *
      * @return mixed
+     * @throws HumbleException
      */
     public function getBy($criteria, $columns = '*')
     {
@@ -113,7 +116,7 @@ class MySQLRepository implements RepositoryInterface
 
         $this->buildCriteria($query, $params, $criteria);
 
-        return $query;
+        return $this->provider->query($query, $params);
     }
 
     /**
@@ -121,7 +124,7 @@ class MySQLRepository implements RepositoryInterface
      * @param array $values
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $criteria, array $values)
     {
@@ -154,7 +157,7 @@ class MySQLRepository implements RepositoryInterface
      * @param array $values
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function insert(array $values)
     {
@@ -180,6 +183,7 @@ class MySQLRepository implements RepositoryInterface
      * @param array $criteria
      *
      * @return mixed
+     * @throws HumbleException
      */
     public function delete(array $criteria)
     {
