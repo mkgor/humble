@@ -10,10 +10,12 @@ namespace Humble\Database;
 interface RepositoryInterface
 {
     /**
-     * @param $primaryKey
+     * @param $value
+     * @param string $primaryKey
+     * @param string $columns
      * @return mixed
      */
-    public function get($primaryKey);
+    public function get($value, $primaryKey = 'id', $columns = '*');
 
     /**
      * @param array|string $columns
