@@ -14,7 +14,7 @@ Lightweight, expandable and easy-to-use query builder.
 Installtion via composer:
 
 ````
-composer require pixaye/commando
+composer require pixaye/humble
 ````
 
 ## Quick start
