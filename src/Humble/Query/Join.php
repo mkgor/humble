@@ -22,6 +22,9 @@ class Join implements QueryInterface
 
     const HUMBLE_OUTER_JOIN_FLAG = 11;
 
+    /**
+     * @var string
+     */
     private $compiled;
 
     /**
