@@ -5,6 +5,7 @@ namespace Humble\Query;
 use Humble\Database\RepositoryInterface;
 use Humble\DatabaseManager;
 use Humble\Exception\HumbleException;
+use Humble\Query\Entity\CompileResult;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 /**
@@ -111,14 +112,11 @@ class Where implements QueryInterface
     }
 
     /**
-     * @return array
+     * @return CompileResult
      */
     public function getCompiled()
     {
-        return [
-            'query_part' => $this->compiled,
-            'params' => $this->params,
-        ];
+        return new CompileResult($this->compiled, $this->params);
     }
 
     /**

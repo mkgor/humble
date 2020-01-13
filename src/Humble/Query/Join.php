@@ -6,6 +6,7 @@ namespace Humble\Query;
 use Humble\Database\RepositoryInterface;
 use Humble\DatabaseManager;
 use Humble\Exception\HumbleException;
+use Humble\Query\Entity\CompileResult;
 
 /**
  * Class Join
@@ -110,9 +111,7 @@ class Join implements QueryInterface
      */
     public function getCompiled()
     {
-        return [
-            'query_part' => $this->compiled
-        ];
+        return new CompileResult($this->compiled);
     }
 
     /**

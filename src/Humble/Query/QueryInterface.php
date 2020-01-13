@@ -3,6 +3,8 @@
 
 namespace Humble\Query;
 
+use Humble\Query\Entity\CompileResult;
+
 /**
  * Interface QueryInterface
  *
@@ -11,7 +13,7 @@ namespace Humble\Query;
 interface QueryInterface
 {
     /**
-     * @return array
+     * @return CompileResult
      */
     public function getCompiled();
 }
