@@ -37,6 +37,9 @@ $db = new \Humble\DatabaseManager([
 /** @var Humble\Database\RepositoryInterface $user */
 $user = $db->user;
 
+/** @var stdClass $someUser */
+$someUser = $user->get(1);
+
 /** @var stdClass[] $administrators */
 $administrators = $user->getBy([
     new \Humble\Query\Where(['admin' => 1])
@@ -65,5 +68,106 @@ $user->delete([
 ]);
 ```
 
+## Query building blocks
 
+You can build complicated queries by using query building blocks. Query building block is a class, which add block of
+SQL code to query.
 
+Example:
+
+```php
+<?php
+/** @var \Humble\Database\RepositoryInterface $user */
+$user = $db->user;
+
+$authorsAndTheirBooks = $user->getBy([
+    new \Humble\Query\Join('books', ['user.id' => 'books.author_id'], \Humble\Query\Join::HUMBLE_LEFT_JOIN),
+    new \Humble\Query\Where(['books.views','>',1000])
+]);
+```
+
+That code will generate SQL
+```sql
+SELECT * FROM `user` LEFT JOIN `books` `books_1234` ON user.id = `books_1234`.author_id WHERE `books_1234`.views > 1000
+```
+
+#### Where, AndWhere, OrWhere
+
+Adding WHERE to query
+
+**Usage:**
+```php
+<?php
+/** @var \Humble\Database\RepositoryInterface $user */
+$user = $db->user;
+
+// ... WHERE `admin` = 1
+$administrators = $user->getBy([
+    new \Humble\Query\Where(['admin' => 1])
+]);
+
+// ... WHERE `admin` = 1 AND `registration_date` > '01-01-2020'
+$newAdministrators = $user->getBy([
+    new \Humble\Query\Where(['admin' => 1],['registration_date', '>' ,'01-01-2020'])
+]);
+
+// Doing the same, but it is unsafe if you are putting non-escaped values into query
+$inlineWhere = $user->getBy([
+    new \Humble\Query\Where('admin = 1 AND registration_date > "01-01-2020"')
+]);
+
+// ... WHERE `name` = 'John Doe' OR (`name` = 'Sarah Doe')
+$objectInWhere = $user->getBy([
+    new \Humble\Query\Where(['name' => 'John Doe'], new \Humble\Query\OrWhere(['name' => 'Sarah Doe']))
+]);
+
+// ... WHERE `name` = 'John Doe' OR (`name` = 'Sarah Doe' AND (`admin` = 1))
+$complexWhere = $user->getBy([
+    new \Humble\Query\Where(['name' => 'John Doe']),
+    new \Humble\Query\OrWhere(['name' => 'Sarah Doe'], new \Humble\Query\AndWhere(['admin' => 1]))
+]);
+```
+
+#### Join
+
+Adding JOIN into your query
+
+```php
+<?php
+
+/** @var \Humble\Database\RepositoryInterface $user */
+$user = $db->user;
+
+$authorsAndTheirBooks = $user->getBy([
+    new \Humble\Query\Join('books', ['user.id' => 'books.author_id'], \Humble\Query\Join::HUMBLE_LEFT_JOIN),
+]);
+
+$outerJoinFlagDemo = $user->getBy([
+    new \Humble\Query\Join('books', ['user.id' => 'books.author_id'], \Humble\Query\Join::HUMBLE_LEFT_JOIN, [\Humble\Query\Join::HUMBLE_OUTER_JOIN_FLAG]),
+]);
+```
+
+**List of all constants**
+```php 
+\Humble\Query\Join::HUMBLE_JOIN
+```
+```php
+\Humble\Query\Join::HUMBLE_LEFT_JOIN
+```
+```php
+\Humble\Query\Join::HUMBLE_RIGHT_JOIN
+```
+```php
+\Humble\Query\Join::HUMBLE_CROSS_JOIN
+```
+```php
+\Humble\Query\Join::HUMBLE_INNER_JOIN
+```
+```php
+\Humble\Query\Join::HUMBLE_NATURAL_JOIN
+```
+
+**List of all flags**
+```php
+\Humble\Query\Join::HUMBLE_OUTER_JOIN_FLAG
+```
