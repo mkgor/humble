@@ -32,4 +32,23 @@ trait RepositoryTrait
             $params = array_merge($params, $compiled->getParameters());
         }
     }
+
+    /**
+     * @param $values
+     * @return array
+     */
+    public function buildValuesArray($values)
+    {
+        $_values = [];
+
+        if(is_object($values)) {
+            foreach($values as $key => $value) {
+                $_values[$key] = $value;
+            }
+        } else {
+            $_values = $values;
+        }
+
+        return $_values;
+    }
 }

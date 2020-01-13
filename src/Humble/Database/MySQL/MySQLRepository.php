@@ -8,6 +8,7 @@ use Humble\Database\RepositoryInterface;
 use Humble\Database\RepositoryTrait;
 use Humble\DatabaseManager;
 use Humble\Exception\HumbleException;
+use MongoDB\Driver\WriteError;
 
 /**
  * Class FallbackRepository
@@ -125,13 +126,14 @@ class MySQLRepository implements RepositoryInterface
      * @return mixed
      * @throws Exception
      */
-    public function update(array $criteria, array $values)
+    public function update($values, array $criteria = [])
     {
+        $values = $this->buildValuesArray($values);
+
         $params = [];
+        $setArray = [];
 
         $query = sprintf('UPDATE %s SET', $this->getEntity());
-
-        $setArray = [];
 
         foreach ($values as $key => $value) {
             if(is_int($key)) {
@@ -153,13 +155,15 @@ class MySQLRepository implements RepositoryInterface
     }
 
     /**
-     * @param array $values
+     * @param array|object $values
      *
      * @return mixed
      * @throws Exception
      */
-    public function insert(array $values)
+    public function insert($values)
     {
+        $values = $this->buildValuesArray($values);
+
         $insertValues = [];
         $params = [];
 

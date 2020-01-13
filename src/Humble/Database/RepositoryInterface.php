@@ -26,19 +26,19 @@ interface RepositoryInterface
     public function getBy($criteria, $columns = '*');
 
     /**
-     * @param array $condition
+     * @param array $criteria
      * @param array $values
      *
      * @return mixed
      */
-    public function update(array $criteria, array $values);
+    public function update($values, array $criteria);
 
     /**
      * @param array $values
      *
      * @return mixed
      */
-    public function insert(array $values);
+    public function insert($values);
 
     /**
      * @param array $conditions
