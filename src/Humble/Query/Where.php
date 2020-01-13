@@ -5,6 +5,7 @@ namespace Humble\Query;
 use Humble\Database\RepositoryInterface;
 use Humble\DatabaseManager;
 use Humble\Exception\HumbleException;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 /**
  * Class Where
@@ -29,6 +30,11 @@ class Where implements QueryInterface
     private $compiled;
 
     /**
+     * @var string
+     */
+    private $operator = 'AND';
+
+    /**
      * Where constructor.
      *
      * @param array $conditions
@@ -38,7 +44,6 @@ class Where implements QueryInterface
     public function __construct(...$conditions)
     {
         foreach ($conditions as $condition) {
-
             /** If condition is array, handling it and preparing parameters, if it is string - putting it as is */
             if (is_array($condition)) {
 
@@ -65,19 +70,41 @@ class Where implements QueryInterface
                 }
 
                 /** If condition structure is unknown */
-                throw new HumbleException('Invalid condition provided to WHERE');
+                throw new HumbleException(sprintf('Invalid condition provided to WHERE (type: %s)', gettype($condition)));
+            } elseif ($condition instanceof Where) {
+                $condition = $condition->getCompiled();
+
+                $this->predicates[] = [
+                    'query_part' => trim($condition['query_part'])
+                ];
+                $this->params = array_merge($this->params, $condition['params']);
             } else {
                 $this->predicates[] = $condition;
             }
         }
 
-        $query = sprintf(' WHERE %s', implode(' AND ', $this->predicates));
+        $query = ' WHERE';
+
+        $firstFlag = true;
+
+        foreach ($this->predicates as $predicate) {
+            $query .= ((!$firstFlag) ? (is_array($predicate)) ? null : sprintf(' %s', $this->getOperator()) : null);
+
+            if ($firstFlag) {
+                $firstFlag = false;
+            }
+
+            $query .= (is_array($predicate)) ? sprintf(' %s',$predicate['query_part']) : sprintf(' %s',$predicate);
+        }
+
         /** @var RepositoryInterface $repository */
         $repository = DatabaseManager::getConfiguration('repository');
         $aliasCollection = $repository->getTableAliasCollection();
 
-        foreach($aliasCollection as $original => $alias) {
-            $query = str_replace(sprintf('%s.', $original), sprintf('%s.', $alias), $query);
+        if (!empty($aliasCollection)) {
+            foreach ($aliasCollection as $original => $alias) {
+                $query = str_replace(sprintf('%s.', $original), sprintf('%s.', $alias), $query);
+            }
         }
 
         $this->setCompiled($query);
@@ -90,7 +117,7 @@ class Where implements QueryInterface
     {
         return [
             'query_part' => $this->compiled,
-            'params'     => $this->params,
+            'params' => $this->params,
         ];
     }
 
@@ -102,4 +129,19 @@ class Where implements QueryInterface
         $this->compiled = $compiled;
     }
 
+    /**
+     * @return string
+     */
+    public function getOperator()
+    {
+        return $this->operator;
+    }
+
+    /**
+     * @param string $operator
+     */
+    public function setOperator($operator)
+    {
+        $this->operator = $operator;
+    }
 }
