@@ -5,6 +5,9 @@ Lightweight, expandable and easy-to-use query builder.
 - [Requirments](https://github.com/pixaye/humble#requirments)
 - [Installation](https://github.com/pixaye/humble#installation)
 - [Quick start](https://github.com/pixaye/humble#quick-start)
+- [Query building blocks](https://github.com/pixaye/humble#query-building-blocks)
+    - [Where, AndWhere, OrWhere](https://github.com/pixaye/humble#where-andwhere-orwhere)
+    - [Join](https://github.com/pixaye/humble#join)
 
 ## Requirments
 - PHP 7.1+
@@ -91,7 +94,7 @@ That code will generate SQL
 SELECT * FROM `user` LEFT JOIN `books` `books_1234` ON user.id = `books_1234`.author_id WHERE `books_1234`.views > 1000
 ```
 
-#### Where, AndWhere, OrWhere
+### Where, AndWhere, OrWhere
 
 Adding WHERE to query
 
@@ -128,7 +131,7 @@ $complexWhere = $user->getBy([
 ]);
 ```
 
-#### Join
+### Join
 
 Adding JOIN into your query
 
