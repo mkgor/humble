@@ -2,12 +2,12 @@
 Lightweight, expandable and easy-to-use query builder.
 
 ## Contents
-- [Requirments](https://github.com/pixaye/humble#requirments)
-- [Installation](https://github.com/pixaye/humble#installation)
-- [Quick start](https://github.com/pixaye/humble#quick-start)
-- [Query building blocks](https://github.com/pixaye/humble#query-building-blocks)
-    - [Where, AndWhere, OrWhere](https://github.com/pixaye/humble#where-andwhere-orwhere)
-    - [Join](https://github.com/pixaye/humble#join)
+- [Requirments](https://github.com/mkgor/humble#requirments)
+- [Installation](https://github.com/mkgor/humble#installation)
+- [Quick start](https://github.com/mkgor/humble#quick-start)
+- [Query building blocks](https://github.com/mkgor/humble#query-building-blocks)
+    - [Where, AndWhere, OrWhere](https://github.com/mkgor/humble#where-andwhere-orwhere)
+    - [Join](https://github.com/mkgor/humble#join)
 
 ## Requirments
 - PHP 7.1+
@@ -17,7 +17,7 @@ Lightweight, expandable and easy-to-use query builder.
 Installtion via composer:
 
 ````
-composer require pixaye/humble
+composer require mkgor/humble
 ````
 
 ## Quick start
